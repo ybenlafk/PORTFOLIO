@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { AiFillEye, AiFillGithub } from 'react-icons/ai';
 import { motion } from 'framer-motion';
-import { Appwrap } from '../../wrapper';
+import { Appwrap, MotionWrap } from '../../wrapper';
 import { urlFor, client } from '../../client';
 import './Work.scss';
 
@@ -19,7 +19,22 @@ const Work = () => {
     });
   }, []);
 
-  const handlerWorkFilter = (item) => {};
+  const handlerWorkFilter = (item) => {
+    setActiveFilter(item);
+    SetAnimateCard([{y: 100, opacity:0}]);
+
+    setTimeout(() =>{
+      SetAnimateCard([{y: 0, opacity:1}]);
+
+      if (item === 'All')
+      {
+        setFilterWork(work)
+      }else
+      {
+        setFilterWork(work.filter((work) => work.tags.includes(item)));
+      }
+    }, 500)
+  };
   return (
     <>
       <h2 className="head-text">
@@ -79,6 +94,10 @@ const Work = () => {
             <div className='app__work-content app__flex'>
               <h4 className='bold-text'>{work.title}</h4>
               <p className='p-text' style={{marginTop: 10}}>{work.description}</p>
+
+              <div className='app__work-tag app__flex'>
+                <p className='p-text'>{work.tags[0]}</p>
+              </div>
             </div>
           </div>
         ))}
@@ -87,4 +106,8 @@ const Work = () => {
   );
 };
 
-export default Work;
+export default Appwrap(
+  MotionWrap(Work, 'app__works'),
+  'work',
+  'app__primarybg'
+  );
